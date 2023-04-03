@@ -2271,7 +2271,7 @@ async function mainScript(
   for (var y = 0; y < sim_res_y + 1; y++) {
     var realTemp = Math.max(
       map_range(y, 0, sim_res_y + 1, 15.0, -70.0),
-      -60);
+      -80);
 
     initial_T[y] =
       realToPotentialT(CtoK(realTemp), y);  // initial temperature profile
