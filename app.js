@@ -48,11 +48,11 @@ const guiControls_default = {
   meltingRate: 0.0025,
   evapRate: 0.0005,  // END OF PRECIPITATION
   displayMode: 'DISP_REAL',
-  timeOfDay: 9.9,
+  timeOfDay: 13.00,
   latitude: 45.0,
   month: 6.67,  // Northern himisphere solstice
   sunAngle: 9.9,
-  dayNightCycle: true,
+  dayNightCycle: false,
   exposure: 1.0,
   greenhouseGases: 0.001,
   IR_rate: 1.0,
@@ -61,13 +61,13 @@ const guiControls_default = {
   wholeWidth: false,
   intensity: 0.01,
   showGraph: false,
-  showDrops: false,
+  showDrops: true,
   paused: false,
   IterPerFrame: 10,
-  auto_IterPerFrame: true,
-  dryLapseRate: 10.0,    // Real: 9.81 degrees / km
-  simHeight: 12000,      // meters 
-  imperialUnits: false,  // only for display.  false = metric
+  auto_IterPerFrame: false,
+  dryLapseRate: 9.81,    // Real: 9.81 degrees / km
+  simHeight: 18000,      // meters 
+  imperialUnits: true,  // only for display.  false = metric
 };
 
 var guiControls;
@@ -633,7 +633,7 @@ async function mainScript(
       })
       .name('Drag');
 
-    fluidParams_folder.add(guiControls, 'wind', -1.0, 1.0, 0.01)
+    fluidParams_folder.add(guiControls, 'wind', -2.0, 2.0, 0.01)
       .onChange(function () {
         gl.useProgram(velocityProgram);
         gl.uniform1f(
@@ -641,7 +641,7 @@ async function mainScript(
       })
       .name('Wind');
 
-    fluidParams_folder.add(guiControls, 'globalDrying', 0.0, 0.001, 0.00001)
+    fluidParams_folder.add(guiControls, 'globalDrying', 0.0, 0.005, 0.00001)
       .onChange(function () {
         gl.useProgram(advectionProgram);
         gl.uniform1f(
@@ -650,7 +650,7 @@ async function mainScript(
       })
       .name('Global Drying');
 
-    fluidParams_folder.add(guiControls, 'globalHeating', -0.002, 0.002, 0.0001)
+    fluidParams_folder.add(guiControls, 'globalHeating', -0.005, 0.005, 0.0001)
       .onChange(function () {
         gl.useProgram(advectionProgram);
         gl.uniform1f(
@@ -688,7 +688,7 @@ async function mainScript(
       })
       .name('Tool')
       .listen();
-    UI_folder.add(guiControls, 'brushSize', 1, 200, 1)
+    UI_folder.add(guiControls, 'brushSize', 1, 400, 1)
       .name('Brush Diameter')
       .listen();
     UI_folder.add(guiControls, 'wholeWidth').name('Whole Width Brush').listen();
@@ -756,7 +756,7 @@ async function mainScript(
 
     var water_folder = datGui.addFolder('Water');
 
-    water_folder.add(guiControls, 'waterTemperature', 0.0, 35.0, 0.1)
+    water_folder.add(guiControls, 'waterTemperature', 0.0, 45.0, 0.1)
       .onChange(function () {
         gl.useProgram(boundaryProgram);
         gl.uniform1f(
@@ -768,7 +768,7 @@ async function mainScript(
           CtoK(guiControls.waterTemperature));
       })
       .name('Lake / Sea Temp (°C)');
-    water_folder.add(guiControls, 'landEvaporation', 0.0, 0.0002, 0.00001)
+    water_folder.add(guiControls, 'landEvaporation', 0.0, 0.0010, 0.00001)
       .onChange(function () {
         gl.useProgram(boundaryProgram);
         gl.uniform1f(
@@ -776,7 +776,7 @@ async function mainScript(
           guiControls.landEvaporation);
       })
       .name('Land Evaporation');
-    water_folder.add(guiControls, 'waterEvaporation', 0.0, 0.0004, 0.00001)
+    water_folder.add(guiControls, 'waterEvaporation', 0.0, 0.0010, 0.00001)
       .onChange(function () {
         gl.useProgram(boundaryProgram);
         gl.uniform1f(
