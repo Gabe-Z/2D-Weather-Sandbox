@@ -97,10 +97,10 @@ void main()
       //  treshHold = max(map_range(realTemp, CtoK(0.0), CtoK(-30.0), subZeroThreshold, initalMass), initalMass);
       threshold = subZeroThreshold;
 
-    if (water[CLOUD] > threshold && base[TEMPERATURE] < 500.) {                                                                     // if cloudwater above threshold and not wall
-                                                                                                                                    // float spawnChance = (water[1] - threshold) * 1000.0 / inactiveDroplets;
-                                                                                                                                    // if (spawnChance > rand2d(mass.xy)) {
-                                                                                                                                    //  float spawnChance = (water[CLOUD] - threshold) / inactiveDroplets * resolution.x * resolution.y * spawnChanceMult;
+    if (water[CLOUD] > threshold && base[TEMPERATURE] < 500.) { // if cloudwater above threshold and not wall
+                                                                // float spawnChance = (water[1] - threshold) * 1000.0 / inactiveDroplets;
+                                                                // if (spawnChance > rand2d(mass.xy)) {
+                                                                //  float spawnChance = (water[CLOUD] - threshold) / inactiveDroplets * resolution.x * resolution.y * spawnChanceMult;
 
       float spawnChance = ((water[CLOUD] - threshold) / (inactiveDroplets + 10.0)) * resolution.x * resolution.y * spawnChanceMult; // 20.0  50.0
 
@@ -127,9 +127,10 @@ void main()
 
           float lightningSpawnChance = max((cloudPlusPrecipDensity - lightningCloudDensityThreshold) * lightningChanceMultiplier, 0.);
 
-          const float minIterationsSinceLastLightningBolt = 30.;                                                                                                                       // 50.
+          const float minIterationsSinceLastLightningBolt = 30.; // 50.
 
-          if (lightningData[START_ITERNUM] < iterNum - minIterationsSinceLastLightningBolt && random2d(vec2(base[TEMPERATURE] * 0.2324, water[TOTAL] * 7.7)) < lightningSpawnChance) { // Spawn lightning
+          if (lightningData[START_ITERNUM] < iterNum - minIterationsSinceLastLightningBolt &&
+              random2d(vec2(base[TEMPERATURE] * 0.2324, water[TOTAL] * 7.7)) < lightningSpawnChance) { // Spawn lightning
             lightningSpawned = true;
             isActive = false;
             gl_PointSize = 1.0;
@@ -170,6 +171,8 @@ void main()
       realTemp = potentialToRealT(base[TEMPERATURE]); // in Kelvin
     }
 
+    float relativeHumidity = relativeHumd(realTemp, water[TOTAL]);
+
     float totalMass = newMass[WATER] + newMass[ICE];
 
     if (totalMass < 0.04) { // to small
@@ -194,12 +197,15 @@ void main()
       // float surfaceArea = sqrt(totalMass); // As if droplet is a circle (2D)
       float surfaceArea = pow(totalMass, 1. / 3.); // As if droplet is a sphere (3D)
 
-                                                   // float growthRate = clamp(map_range(realTemp, CtoK(0.0), CtoK(-30.0), growthRate0C, growthRate_30C), growthRate0C, growthRate_30C); // the colder it gets the faster ice forms
+      // float growthRate = clamp(map_range(realTemp, CtoK(0.0), CtoK(-30.0), growthRate0C, growthRate_30C), growthRate0C, growthRate_30C); // the colder it gets the faster ice forms
       float growthRate = max(map_range(realTemp, CtoK(0.0), CtoK(-30.0), growthRate0C, growthRate_30C), growthRate0C); // the colder it gets the faster ice forms
 
       // growthRate = 0.0;                                                                                                                  // for debug
 
       float growth = water[CLOUD] * growthRate * surfaceArea;
+
+      growth += max(relativeHumidity - 1.0, 0.) * max(-30.0 - KtoC(realTemp), 0.) * 0.0001; // increase growthrate below -30 C and above 100% relative humidity
+
 
       // Hail growth enhancement:
       if (realTemp < CtoK(0.0) && water[CLOUD] > 0.0 && density == 1.0) { // below freezing
