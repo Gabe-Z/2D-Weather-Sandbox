@@ -430,9 +430,9 @@ var datGui;
 var sim_res_x;
 var sim_res_y;
 var sim_aspect; //  = sim_res_x / sim_res_y
-var sim_height = 12000;
+var sim_height = 18000;
 
-var cellHeight = 12000. / 300.; // guiControls.simHeight / sim_res_y;  // in meters // cell width is the same
+var cellHeight = 18000. / 300.; // guiControls.simHeight / sim_res_y;  // in meters // cell width is the same
 
 var frameNum = 0;
 var lastFrameNum = 0;
