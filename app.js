@@ -347,7 +347,7 @@ const guiControls_default = {
   dragMultiplier : 0.001, // 0.01
   wind : 0.0,
   globalEffectsStartAlt : 0,
-  globalEffectsEndAlt : 10000,
+  globalEffectsEndAlt : 18000,
   globalDrying : 0.000000, // 0.000010
   globalHeating : 0.0,
   soundingForcing : 0.0,
@@ -399,7 +399,7 @@ const guiControls_default = {
   auto_IterPerFrame : true,
   sound : true,
   dryLapseRate : 10.0,     // Real: 9.8 degrees / km
-  simHeight : 12000,       // meters
+  simHeight : 18000,       // meters
   twelveHourClock : false, // only for display.  false = metric
   lengthUnit : 'LENGTH_UNIT_METRIC',
   tempUnit : 'TEMP_UNIT_C',
