@@ -204,7 +204,7 @@ void main()
 
       float growth = water[CLOUD] * growthRate * surfaceArea;
 
-      growth += max(relativeHumidity - 1.0, 0.) * max(-30.0 - KtoC(realTemp), 0.) * 0.0001; // increase growthrate below -30 C and above 100% relative humidity
+      growth += max(relativeHumidity - 1.0, 0.) * max(-30.0 - KtoC(realTemp), 0.) * 0.0000; // increase growthrate below -30 C and above 100% relative humidity
 
 
       // Hail growth enhancement:
